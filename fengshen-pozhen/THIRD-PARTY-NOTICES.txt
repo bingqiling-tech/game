@@ -1,4 +1,4 @@
-《封神破阵》哪吒初阵战术试玩
+《封神破阵》西岐初阵网页游戏
 Third-party credits and license notices
 
 Godot Engine 4.7.2.stable
@@ -8,7 +8,7 @@ See GODOT-LICENSE.txt for the engine permission and copyright notice,
 and GODOT-COPYRIGHT.txt for upstream third-party notices and licenses.
 Engine contributor list: https://github.com/godotengine/godot/blob/4.7.2-stable/AUTHORS.md
 
-Fengshen Tactics Sans Regular
+Fengshen Campaign Sans Regular
 Modified subset of Noto Sans CJK SC Regular, version 2.004.
 Copyright 2014-2021 Adobe (http://www.adobe.com/), as recorded in the source font.
 Upstream: https://github.com/notofonts/noto-cjk/tree/Sans2.004
