@@ -115,6 +115,30 @@ body {
 	const realFetch = window.fetch.bind(window);
 	window.fetch = function (input, init) {
 		const url = new URL(input instanceof Request ? input.url : input, page);
+		if (url.href === new URL("index.pck", page).href &&
+			(init?.method || (input instanceof Request ? input.method : "GET")).toUpperCase() === "GET") {
+			const files = ["index.pack.fc4012295291c252.0.bin", "index.pack.fc4012295291c252.1.bin"];
+			const signal = init?.signal ?? (input instanceof Request ? input.signal : undefined);
+			let pos = 0, reader = null;
+			return Promise.resolve(new Response(new ReadableStream({
+				async pull(controller) {
+					while (true) {
+						if (!reader) {
+							if (pos === files.length) { controller.close(); return; }
+							const part = new URL(files[pos++], page);
+							part.searchParams.set("build", "fc4012295291c252");
+							const reply = await realFetch(part, { signal });
+							if (!reply.ok || !reply.body) throw new Error(`游戏资源读取失败：${part.pathname} (${reply.status})`);
+							reader = reply.body.getReader();
+						}
+						const data = await reader.read();
+						if (!data.done) { controller.enqueue(data.value); return; }
+						reader.releaseLock(); reader = null;
+					}
+				},
+				cancel(reason) { return reader?.cancel(reason); },
+			}), {headers: {"Content-Type":"application/octet-stream", "Content-Length":"14472112"}}));
+		}
 		if (url.href !== engine || (init?.method || (input instanceof Request ? input.method : "GET")).toUpperCase() !== "GET") {
 			return realFetch(input, init);
 		}
@@ -156,7 +180,7 @@ body {
 </script>
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":9884436,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":14472112,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
